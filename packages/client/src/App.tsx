@@ -12,7 +12,7 @@ function App() {
   },[])
 
   return (
-    <p>
+    <p className='p-4 font-bold text-3xl'>
       Hiiiiiii {message}
     </p>
   )
