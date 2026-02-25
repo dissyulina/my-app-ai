@@ -2,7 +2,7 @@ import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { PrismaClient, type Review } from '../generated/prisma/client';
 
 export const reviewRepository = {
-  async getReviews(productId: number): Promise<Review[]> {
+  async getReviews(productId: number, limit?: number): Promise<Review[]> {
     const adapter = new PrismaMariaDb(process.env.DATABASE_URL!);
     const prisma = new PrismaClient({ adapter });
 
@@ -10,6 +10,7 @@ export const reviewRepository = {
     return prisma.review.findMany({
       where: { productId },
       orderBy: { createdAt: 'desc' },
+      take: limit,
     });
   },
 };
