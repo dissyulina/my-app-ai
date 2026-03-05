@@ -10,6 +10,7 @@ import {
   type GetReviewsResponse,
   type SummarizeResponse,
 } from './reviewsApi';
+import AddReviewDialog from './AddReviewDialog';
 
 type ReviewListProps = {
   productId: number;
@@ -90,6 +91,10 @@ const ReviewList = ({ productId }: ReviewListProps) => {
             )}
           </div>
         )}
+      </div>
+      <hr className="mb-5"></hr>
+      <div>
+        <AddReviewDialog productId={productId} />
       </div>
       <div className="flex flex-col gap-5">
         {reviewsQuery.data?.reviews.map((review) => (

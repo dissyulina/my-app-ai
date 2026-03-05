@@ -8,6 +8,16 @@ export type Review = {
   createdAt: string;
 };
 
+export type CreateReviewPayload = {
+  author: string;
+  rating: number;
+  content: string;
+};
+
+export type CreateReviewResponse = {
+  review: Review;
+};
+
 export type GetReviewsResponse = {
   summary: string | null;
   reviews: Review[];
@@ -22,6 +32,12 @@ export type DeleteSummaryResponse = {
 };
 
 export const reviewsApi = {
+  createReview(productId: number, payload: CreateReviewPayload) {
+    return axios
+      .post<CreateReviewResponse>(`/api/products/${productId}/reviews`, payload)
+      .then((res) => res.data);
+  },
+
   fetchReviews(productId: number) {
     return axios
       .get<GetReviewsResponse>(`/api/products/${productId}/reviews`)

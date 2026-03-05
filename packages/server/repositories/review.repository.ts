@@ -15,6 +15,17 @@ export const reviewRepository = {
     });
   },
 
+  createReview(
+    productId: number,
+    author: string,
+    rating: number,
+    content: string
+  ) {
+    return prisma.review.create({
+      data: { productId, author, rating, content },
+    });
+  },
+
   storeReviewSummary(productId: number, summary: string) {
     const now = new Date();
     const expiresAt = dayjs().add(7, 'days').toDate();
