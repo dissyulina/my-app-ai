@@ -44,4 +44,10 @@ export const reviewRepository = {
 
     return summary ? summary.content : null;
   },
+
+  deleteReviewSummary(productId: number) {
+    return prisma.summary.delete({
+      where: { productId },
+    });
+  },
 };

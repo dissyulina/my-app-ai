@@ -1,10 +1,12 @@
 import { HiSparkles } from 'react-icons/hi2';
+import { MdDeleteOutline } from 'react-icons/md';
 import StarRating from './StarRating';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import ReviewSkeleton from './ReviewSkeleton';
 import {
   reviewsApi,
+  type DeleteSummaryResponse,
   type GetReviewsResponse,
   type SummarizeResponse,
 } from './reviewsApi';
@@ -14,6 +16,8 @@ type ReviewListProps = {
 };
 
 const ReviewList = ({ productId }: ReviewListProps) => {
+  const queryClient = useQueryClient();
+
   const summaryMutation = useMutation<SummarizeResponse>({
     mutationFn: () => reviewsApi.summarizeReviews(productId),
   });
@@ -21,6 +25,14 @@ const ReviewList = ({ productId }: ReviewListProps) => {
   const reviewsQuery = useQuery<GetReviewsResponse>({
     queryKey: ['reviews', productId],
     queryFn: () => reviewsApi.fetchReviews(productId),
+  });
+
+  const deleteSummaryMutation = useMutation<DeleteSummaryResponse>({
+    mutationFn: () => reviewsApi.deleteSummary(productId),
+    onSuccess: () => {
+      summaryMutation.reset();
+      queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
+    },
   });
 
   if (reviewsQuery.isLoading) {
@@ -44,9 +56,18 @@ const ReviewList = ({ productId }: ReviewListProps) => {
 
   return (
     <div>
-      <div className="mb-5">
+      <div className="mb-5 mt-5">
         {currentSummary ? (
-          <p>{currentSummary}</p>
+          <div className="flex flex-row gap-5">
+            <p className="grow">{currentSummary}</p>
+            <Button
+              onClick={() => deleteSummaryMutation.mutate()}
+              className="cursor-pointer"
+              disabled={summaryMutation.isPending}
+            >
+              <MdDeleteOutline />
+            </Button>
+          </div>
         ) : (
           <div>
             <Button

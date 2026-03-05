@@ -17,6 +17,10 @@ export type SummarizeResponse = {
   summary: string;
 };
 
+export type DeleteSummaryResponse = {
+  message: string;
+};
+
 export const reviewsApi = {
   fetchReviews(productId: number) {
     return axios
@@ -27,6 +31,14 @@ export const reviewsApi = {
   summarizeReviews(productId: number) {
     return axios
       .post<SummarizeResponse>(`/api/products/${productId}/reviews/summarize`)
+      .then((res) => res.data);
+  },
+
+  deleteSummary(productId: number) {
+    return axios
+      .delete<DeleteSummaryResponse>(
+        `/api/products/${productId}/reviews/summarize`
+      )
       .then((res) => res.data);
   },
 };

@@ -18,4 +18,13 @@ export const reviewService = {
 
     return summary;
   },
+
+  async deleteReviewSummary(productId: number): Promise<void> {
+    const existingSummary = await reviewRepository.getReviewSummary(productId);
+    if (!existingSummary) {
+      throw new Error('No summary found for this product.');
+    }
+
+    await reviewRepository.deleteReviewSummary(productId);
+  },
 };
