@@ -1,6 +1,5 @@
 import { HiSparkles } from 'react-icons/hi2';
 import { MdDeleteOutline } from 'react-icons/md';
-import StarRating from './StarRating';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 import ReviewSkeleton from './ReviewSkeleton';
@@ -11,6 +10,7 @@ import {
   type SummarizeResponse,
 } from './reviewsApi';
 import AddReviewDialog from './AddReviewDialog';
+import ReviewItem from './ReviewItem';
 
 type ReviewListProps = {
   productId: number;
@@ -32,7 +32,13 @@ const ReviewList = ({ productId }: ReviewListProps) => {
     mutationFn: () => reviewsApi.deleteSummary(productId),
     onSuccess: () => {
       summaryMutation.reset();
-      queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
+      queryClient.setQueryData<GetReviewsResponse>(
+        ['reviews', productId],
+        (old) => {
+          if (!old) return old;
+          return { ...old, summary: null };
+        }
+      );
     },
   });
 
@@ -98,13 +104,7 @@ const ReviewList = ({ productId }: ReviewListProps) => {
       </div>
       <div className="flex flex-col gap-5">
         {reviewsQuery.data?.reviews.map((review) => (
-          <div key={review.id}>
-            <div className="font-semibold">{review.author}</div>
-            <div>
-              <StarRating value={review.rating} />
-            </div>
-            <p className="py-2">{review.content}</p>
-          </div>
+          <ReviewItem productId={productId} review={review} key={review.id} />
         ))}
       </div>
     </div>

@@ -67,6 +67,29 @@ export const reviewController = {
     res.status(201).json({ review });
   },
 
+  async deleteReview(req: Request, res: Response) {
+    const productId = Number(req.params.id);
+    const reviewId = Number(req.params.reviewId);
+
+    if (isNaN(productId) || isNaN(reviewId)) {
+      res.status(400).json({ error: 'Invalid product or review ID.' });
+      return;
+    }
+
+    const product = productRepository.getProduct(productId);
+    if (!product) {
+      res.status(400).json({ error: 'Invalid product.' });
+      return;
+    }
+
+    try {
+      await reviewService.deleteReview(productId, reviewId);
+      res.status(200).json({ message: 'Review deleted successfully.' });
+    } catch {
+      res.status(404).json({ error: 'Review not found.' });
+    }
+  },
+
   async summarizeReviews(req: Request, res: Response) {
     const productId = Number(req.params.id);
 

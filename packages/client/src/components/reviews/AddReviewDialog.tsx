@@ -24,7 +24,7 @@ type AddReviewDialogProps = {
 
 const AddReviewDialog = ({ productId }: AddReviewDialogProps) => {
   const queryClient = useQueryClient();
-
+  const [open, setOpen] = useState(false);
   const [author, setAuthor] = useState('');
   const [rating, setRating] = useState(3);
   const [content, setContent] = useState('');
@@ -37,11 +37,12 @@ const AddReviewDialog = ({ productId }: AddReviewDialogProps) => {
       setAuthor('');
       setContent('');
       setRating(3);
+      setOpen(false);
     },
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild className="mb-5">
           <Button variant="outline">
@@ -96,9 +97,9 @@ const AddReviewDialog = ({ productId }: AddReviewDialogProps) => {
             </DialogClose>
             <Button
               type="submit"
-              onClick={() =>
-                createReviewMutation.mutate({ author, rating, content })
-              }
+              onClick={() => {
+                createReviewMutation.mutate({ author, rating, content });
+              }}
             >
               Save
             </Button>

@@ -26,6 +26,18 @@ export const reviewRepository = {
     });
   },
 
+  deleteReview(reviewId: number) {
+    return prisma.review.delete({
+      where: { id: reviewId },
+    });
+  },
+
+  getSingleReview(reviewId: number) {
+    return prisma.review.findUnique({
+      where: { id: reviewId },
+    });
+  },
+
   storeReviewSummary(productId: number, summary: string) {
     const now = new Date();
     const expiresAt = dayjs().add(7, 'days').toDate();
@@ -57,7 +69,7 @@ export const reviewRepository = {
   },
 
   deleteReviewSummary(productId: number) {
-    return prisma.summary.delete({
+    return prisma.summary.deleteMany({
       where: { productId },
     });
   },

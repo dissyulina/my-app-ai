@@ -12,6 +12,16 @@ export const reviewService = {
     return reviewRepository.createReview(productId, author, rating, content);
   },
 
+  async deleteReview(productId: number, reviewId: number): Promise<void> {
+    const review = await reviewRepository.getSingleReview(reviewId);
+    if (!review || review.productId !== productId) {
+      throw new Error('Review not found.');
+    }
+
+    await reviewRepository.deleteReview(reviewId);
+    await reviewRepository.deleteReviewSummary(productId);
+  },
+
   async summarizeReviews(productId: number): Promise<string> {
     const existingSummary = await reviewRepository.getReviewSummary(productId);
     if (existingSummary) {

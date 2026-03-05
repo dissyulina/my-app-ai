@@ -24,9 +24,14 @@ router.post(
   '/api/products/:id/reviews/summarize',
   reviewController.summarizeReviews
 );
+
 router.delete(
   '/api/products/:id/reviews/summarize',
   reviewController.deleteReviewSummary
+);
+router.delete(
+  '/api/products/:id/reviews/:reviewId',
+  reviewController.deleteReview
 );
 
 export default router;

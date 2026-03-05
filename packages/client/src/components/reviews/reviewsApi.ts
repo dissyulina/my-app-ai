@@ -18,6 +18,10 @@ export type CreateReviewResponse = {
   review: Review;
 };
 
+export type DeleteReviewResponse = {
+  message: string;
+};
+
 export type GetReviewsResponse = {
   summary: string | null;
   reviews: Review[];
@@ -41,6 +45,14 @@ export const reviewsApi = {
   fetchReviews(productId: number) {
     return axios
       .get<GetReviewsResponse>(`/api/products/${productId}/reviews`)
+      .then((res) => res.data);
+  },
+
+  deleteReview(productId: number, reviewId: number) {
+    return axios
+      .delete<DeleteReviewResponse>(
+        `/api/products/${productId}/reviews/${reviewId}`
+      )
       .then((res) => res.data);
   },
 
